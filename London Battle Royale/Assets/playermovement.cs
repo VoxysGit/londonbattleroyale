@@ -19,6 +19,6 @@ public class playermovement : MonoBehaviour
         float horInput = horInput.GetAxisRaw("Horizontal") * MoveSpeed;
         float verInput = horInput.GetAxisRaw("Vertical") * MoveSpeed;
 
-        rb.velocity = new Vector3(horInput, 0, verInput)
+        rb.velocity = new Vector3(horInput, 0, verInput);
     }
 }
