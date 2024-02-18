@@ -5,12 +5,11 @@ using UnityEngine;
 public class playermovement : MonoBehaviour
 {
     Rigidbody rb;
-    [SerializedField] float MoveSpeed = 10;
+    [SerializeField] float MoveSpeed = 10;
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-
     }
 
     // Update is called once per frame
