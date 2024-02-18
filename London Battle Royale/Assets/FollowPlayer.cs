@@ -20,7 +20,7 @@ public class FollowPlayer : MonoBehaviour
     {
         transform.position = Player.position;
         localRot.x += Input.GetAxis("Mouse X") * MouseSpeed;
-        localRot.y -= Input.GetAxis("Mouse Y") * MouseSpeed;
+        localRot.y -= Input.GetAxis("Mouse Y") * 2 * MouseSpeed;
 
         localRot.y = Mathf.Clamp(localRot.y,0f,80f);
 
