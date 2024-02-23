@@ -29,8 +29,8 @@ Transform:
   m_GameObject: {fileID: 3317578401117646392}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 4.32, z: 0}
-  m_LocalScale: {x: 0.99116, y: 1.3837585, z: 0.99116}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3526093718019611082}
@@ -120,6 +120,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38eaf545496289a47952429daa08c2ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveSpeed: 0
+  groundDrag: 0
+  jumpforce: 0
+  jumpCooldown: 0
+  airMultiplier: 0
+  jumpKey: 32
+  playerHeight: 0
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 0
+  orientation: {fileID: 0}
 --- !u!1 &6918550146757623131
 GameObject:
   m_ObjectHideFlags: 0
