@@ -2,29 +2,106 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class playermovement : MonoBehaviour
+public class PlayerMovement : MonoBehaviour
 {
+    [Header("Movement")]
+    public float moveSpeed;
+
+    public float groundDrag;
+
+    public float jumpforce;
+    public float jumpCooldown;
+    public float airMultiplier;
+    bool readyToJump;
+
+    [Header("Keybinds")]
+    public KeyCode jumpKey = KeyCode.Space;
+
+    [Header("Ground Check")]
+    public float playerHeight;
+    public LayerMask whatIsGround;
+    bool grounded;
+    public Transform orientation;
+    float horInput;
+    float verInput;
+    Vector3 moveDirection;
     Rigidbody rb;
-    [SerializeField] float MoveSpeed = 10;
-    [SerializeField] float Jump = 5;
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        rb.freezeRotation = true;
+        readyToJump = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        float horInput = Input.GetAxisRaw("Horizontal") * MoveSpeed;
-        float verInput = Input.GetAxisRaw("Vertical") * MoveSpeed;
+        //ground check
+        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
+        
+        MyInput();
+        Speedcontrol();
 
-        rb.velocity = new Vector3(horInput, rb.velocity.y, verInput);
+        //handle drag
+        if(grounded)
+            rb.drag = groundDrag;
+        else
+            rb.drag = 0;
 
-        if(Input.GetButtonDown("Jump") && Mathf.Approximately(rb.velocity.y,0)){
-            rb.velocity = new Vector3(rb.velocity.x, Jump, rb.velocity.z);
+    }
+
+    private void FixedUpdate()
+    {
+        MovePlayer();
+    }
+    private void MyInput()
+    {
+        horInput = Input.GetAxisRaw("Horizontal");
+        verInput = Input.GetAxisRaw("Vertical");
+
+        if(Input.GetKey(jumpKey) && readyToJump && grounded)
+        {
+            readyToJump = false;
+
+            Jump();
+
+            Invoke(nameof(ResetJump), jumpCooldown);
         }
+    }
+    private void MovePlayer()
+    {
+        // calc movement direction
+        moveDirection = orientation.forward * verInput + orientation.right * horInput;
+        
+        if(grounded)
+            rb.AddForce(10f * moveSpeed * moveDirection.normalized, ForceMode.Force);
 
-        transform.forward = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+        else if(!grounded)
+            rb.AddForce(10f * moveSpeed * airMultiplier * moveDirection.normalized, ForceMode.Force);
+    }
+
+    private void Speedcontrol()
+    {
+        Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+
+        if(flatVel.magnitude > moveSpeed)
+        {
+            Vector3 limitedVel = flatVel.normalized * moveSpeed;
+            rb.velocity = new Vector3(limitedVel.x,rb.velocity.y,limitedVel.z);
+        }
+    }
+
+    private void Jump()
+    {
+        //reset y velocity
+        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+
+        rb.AddForce(transform.up * jumpforce, ForceMode.Impulse);
+
+    }
+    private void ResetJump()
+    {
+        readyToJump = true;
     }
 }
